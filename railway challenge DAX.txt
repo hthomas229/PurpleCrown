@@ -1,0 +1,55 @@
+Average Late Time = 
+    VAR TotalSeconds = AVERAGEX(railway, HOUR(railway[Late Time]) * 3600 + MINUTE(railway[Late Time]) * 60 + SECOND(railway[Late Time]))
+    VAR Days = INT(TotalSeconds / (24 * 3600))
+    VAR Hours = INT(MOD(TotalSeconds - Days * 24 * 3600, 24 * 3600) / 3600)
+    VAR Minutes = INT(MOD(TotalSeconds - Days * 24 * 3600 - Hours * 3600, 3600) / 60)
+    VAR Seconds = MOD(TotalSeconds, 60)
+    RETURN
+       FORMAT(Hours, "0") & ":" & FORMAT(Minutes, "00") & ":" & FORMAT(Seconds, "00")
+
+Tickets Sold Rank = IF(
+    ISINSCOPE(railway[Route]),
+RANKX(
+    ALL(railway[Route]),
+    [Total Journeys],
+    ,
+    DESC,
+    Dense
+),
+BLANK()
+)
+
+Selected Route & Day = 
+VAR SelectedRoute =
+    IF (
+        ISFILTERED('railway'[Route]),  -- Check if 'Route' column is filtered
+        CALCULATE (
+            CONCATENATEX (
+                VALUES('railway'[Route]),
+                'railway'[Route],
+                UNICHAR(10)
+            ),
+            ALLSELECTED('railway')
+        ),
+        "All Routes"  -- If none are selected, return "All Occupations"
+    )
+ VAR SelectedDay =   
+        IF (
+        ISFILTERED('Calendar'[DayOfWeekName]),
+        CALCULATE(
+            CONCATENATEX(
+            VALUES('Calendar'[DayOfWeekName]),
+            'Calendar'[DayOfWeekName],
+            UNICHAR(10)
+        ),
+        ALLSELECTED('Calendar')
+                ),
+        "All Days"
+    )
+    RETURN
+    "Weekday Route Analysis:  " & UNICHAR(10) &
+    SelectedDay & UNICHAR(10) & SelectedRoute
+
+
+Departure Floor = FLOOR(railway[Departure Time],"0:30")
+Route = railway[Departure Station] & " - " & railway[Arrival Destination]
