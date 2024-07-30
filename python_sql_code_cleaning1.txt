@@ -1,0 +1,27 @@
+--SELECT 
+--	FirstName
+--	,LastName
+--	,FirstName + ' ' + LastName As FullName
+--FROM dbo.acmecleaning
+
+--ALTER TABLE dbo.acmecleaning
+--ADD FullName  NVARCHAR(50)
+
+--UPDATE dbo.acmecleaning
+--SET FullName = FirstName + ' ' + LastName
+
+SELECT * 
+FROM dbo.acmecleaning
+
+import pandas as pd
+
+# Define the file path
+file_path = r'C:\Users\hthom\OneDrive\Video Media\Power BI\AD\acmecleaning.csv'
+
+# Read the CSV file into a DataFrame
+df = pd.read_csv(file_path)
+
+# Display the first few rows of the DataFrame
+df
+
+df['FullName'] = df['FirstName'] + ' ' + df['LastName']
