@@ -1,0 +1,21 @@
+EmployeeID,FirstName,LastName,Phone,Address,Email,Department,Salary
+3001,James,Smith,482-910-2756,"123 Maple St, Springfield, IL 62701",JamesSmith@acmewidgets.com,IT,90000
+3002,Mary,Johnson,(159)287-4630,"456 Oak Ave, Madison, WI 53703",MaryJohnson@acme.com,I.T.,90000
+3003,Robert,Williams,9736125840,"789 Pine Rd, Austin, TX 73301",RobertWilliams@acmewidgets.com,Marketing,80000
+3004,Patricia,Brown,608 359 1274,"101 Elm St, Denver, CO 80202",PatriciaBrown@acmewidgets.com,HR,100000
+3005,John,Jones,245-170-9386,"202 Cedar Blvd, Miami, FL 33101",JohnJones@acmewidgets.com,Admin,110000
+3006,Jennifer,Garcia,,"303 Birch Ln, Seattle, WA 98101",JenniferGarcia@acmewidgets.com,Management,120000
+3007,Michael,Miller,5162837409,"404 Walnut St, Portland, OR 97201",MichaelMiller@acmewidgets.com,IT,95000
+3008,Linda,Davis,(890)427 6153,"505 Cherry Dr, Nashville, TN 37201",LindaDavis@acmewidgets.com,Sales,75000
+3009,William,Rodriguez,/362-814-5790,"606 Aspen Ct, Phoenix, AZ 85001",WilliamRodriguez@acmewidgets.com,MKTG,85000
+3010,Elizabeth,Martinez,,"707 Cypress Pl, Atlanta, GA 30301",ElizabethMartinez@acme.com,Marketing,80000
+3011,David,Hernandez,1092837465,"808 Redwood St, Raleigh, NC 27601",DavidHernandez@acmewidgets.com,,75000
+3012,Barbara,Lopez,(568) 392-4710,"909 Magnolia Blvd, Boston, MA 02101",BarbaraLopez@acmewidgets.com,Admin,110000
+3013,Richard,Gonzalez,(742)0983516,"1010 Fir St, Columbus, OH 43201",RichardGonzalez@acmewidgets.com,Mktg,85000
+3014,Susan,Wilson,2148756903,,SusanWilson@acmewidgets.com,Marketing,80000
+3015,Joseph,Anderson,357 904 8126,,JosephAnderson@acmewidgets.com,IT,95000
+3016,Jessica,Thomas,6854721039,"1313 Willow Ln, Houston, TX 77001",JessicaThomas@acme.com,Mktg,80000
+3017,Thomas,Taylor,910-273-8456,"1414 Sycamore Dr, Philadelphia, PA 19101",ThomasTaylor@acmewidgets.com,I.T.,90000
+3018,Sarah,Moore,4321985760,"1515 Poplar St, San Francisco, CA 94101",SarahMoore@acmewidgets.org,Sales,75000
+3019,Charles,Jackson,7589304126,"1616 Ash Blvd, New York, NY 10001",CharlesJackson@acmewidgets.com,Management,115000
+3020,Karen,Martin,604-321-8790,"1717 Beech Pl, Los Angeles, CA 90001",KarenMartin@acmewidgets.com,Sales,80000
