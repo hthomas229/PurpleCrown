@@ -1,0 +1,50 @@
+Lesson 2 Cleaning Text Strings
+
+Python
+
+df['Phone'] = df['Phone'].astype(str).str.replace(r'[-/\s()]', '', regex=True)
+
+df['Phone'] = df['Phone'].apply(lambda x: f"{x[:3]}-{x[3:6]}-{x[6:]}")
+
+
+
+SQL
+
+SELECT *
+FROM dbo.acmecleaning
+
+--SELECT
+--	[Phone]
+--	,REPLACE(Phone,'-', '') AS CleanedPhoneNumer
+--FROM dbo.acmecleaning
+
+SELECT Phone,
+REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(Phone, '-', ''), '/', ''), '(', ''), ')', ''), ' ', '') AS CleanedPhone
+FROM dbo.acmecleaning
+
+SELECT TRANSLATE(Phone, '-/() ', '') AS CleanedPhone
+FROM dbo.acmecleaning
+
+ALTER TABLE dbo.acmecleaning
+ADD CleanedPhone VARCHAR(20)
+
+UPDATE dbo.acmecleaning
+SET CleanedPhone =
+		REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(Phone, '-', ''), '/', ''), '(', ''), ')', ''), ' ', '')
+FROM dbo.acmecleaning
+
+SELECT 
+	SUBSTRING(CleanedPhone, 1, 3) + '-' +
+	SUBSTRING(CleanedPhone, 4, 3) + '-' +
+	SUBSTRING(CleanedPhone, 7, 4) AS FormattedPhone
+FROM dbo.acmecleaning
+
+ALTER TABLE dbo.acmecleaning
+ADD FormattedPhone VARCHAR(20)
+
+UPDATE dbo.acmecleaning
+SET FormattedPhone =
+	SUBSTRING(CleanedPhone, 1, 3) + '-' +
+	SUBSTRING(CleanedPhone, 4, 3) + '-' +
+	SUBSTRING(CleanedPhone, 7, 4)
+FROM dbo.acmecleaning
