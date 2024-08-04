@@ -1,0 +1,81 @@
+	SELECT 
+	    TRIM(BOTH '"' FROM [Address]) AS CleanedText
+	FROM 
+	    [dbo].[acmecleaning]
+	
+	
+	UPDATE dbo.acmecleaning
+	SET address = 
+				TRIM(BOTH '"' FROM [Address]) FROM 
+	    [dbo].[acmecleaning]
+	
+	
+	SPLIT
+	
+	SELECT
+		LEFT(Address,
+			CHARINDEX(',', Address) - 1) AS StreetAddress
+	FROM dbo.acmecleaning
+	
+	SELECT
+	SUBSTRING(Address,
+		CHARINDEX(',', Address) + 2, 
+	    CHARINDEX(',', Address, CHARINDEX(',', Address) + 1) - CHARINDEX(',', Address) - 2)
+		FROM dbo.acmecleaning  AS City
+	
+	SELECT
+		SUBSTRING(Address,
+		CHARINDEX(',', Address, CHARINDEX(',', Address) + 1) + 2,
+		2)
+	FROM dbo.acmecleaning AS State
+	
+	
+	SELECT address,
+	SUBSTRING(Address, LEN(Address) - CHARINDEX(' ', REVERSE(Address)) + 1, 6) AS ZipCode
+	FROM dbo.acmecleaning
+	  
+	
+	
+	
+	ALTER TABLE [dbo].[acmecleaningsandbox]
+	ADD	StreetAddress		VARCHAR(100)
+		City		VARCHAR(50),
+		State		VARCHAR(20),
+		ZIP			VARCHAR(10)
+	
+	
+	UPDATE [dbo].[acmecleaningsandbox]
+	SET	StreetAddress = LEFT(
+						Address,
+						CHARINDEX(',', Address) -1),
+		 City =			SUBSTRING(Address,
+						CHARINDEX(',', Address) + 2, 
+						CHARINDEX(',', Address, CHARINDEX(',', Address) + 1) - CHARINDEX(',', Address) - 2),
+		State =			SUBSTRING(Address,
+						CHARINDEX(',', Address, CHARINDEX(',', Address) + 1) + 2, 2),
+		ZIP =		SUBSTRING(Address, LEN(Address) - CHA
+	
+	
+	
+	
+	
+	
+	Pandas
+	
+	import pandas as pd
+	
+	df['Address'].str.split(',', 3, expand=True)
+	
+	FIX ERROR
+	
+	df['Address'].str.split(pat =',', n=3, expand=True)
+	
+	
+	df[['StreetAddress', 'City', 'StateZIP']] = df['Address'].str.split(pat =',', n = 3, expand=True)
+	
+	df['StateZIP'].str.split(pat = ' ', n = 1, expand=True)
+	
+	
+	CHANGE 1 to 2 beacause NaNs are creating another colun
+	
+df[['Extra','State', 'ZIP']] = df['StateZIP'].str.split(pat = ' '
