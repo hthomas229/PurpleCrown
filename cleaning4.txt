@@ -1,0 +1,98 @@
+	SQL
+	
+	DROP COLUMNS
+	
+	ALTER TABLE dbo.acmecleaning
+	DROP COLUMN
+			CleanedPhone
+			,Phone
+			,Address
+	
+	
+	SELECT *
+	FROM [dbo].[acmecleaning]
+	
+	Standardize Values
+	
+	UPDATE dbo.acmecleaning
+	SET Department = 
+			REPLACE(Department, 'Mktg', 'Marketing')		
+	
+	
+	UPDATE dbo.acmecleaningsandbox
+	SET Department = 
+			REPLACE(Department, 'I.T.', 'IT')
+	
+	UPDATE dbo.acmecleaningsandbox
+	SET Department = 
+			REPLACE(Department, 'Admin', 'Management')
+	
+	UPDATE dbo.acmecleaningsandbox
+	SET email = 
+			REPLACE(email, 'acme.com', 'acmewidgets.com')
+	
+	REPLACE NULLS
+	
+	SELECT 
+		ISNULL(StreetAddress, '')
+		,ISNULL(Department,'')
+		,ISNULL(City,'')
+		,ISNULL(State,'')
+		,ISNULL(ZIP, '')
+		,ISNULL(Phone,'')
+	FROM dbo.acmecleaning
+	
+	
+	UPDATE dbo.acmecleaning
+	SET 
+			StreetAddress =		ISNULL(StreetAddress, ''),
+			Department =		ISNULL(Department,''),
+			City =				ISNULL(City,''),
+			State =				ISNULL(State,''),
+			ZIP = 			ISNULL(ZIP, ''),
+			Phone = 			ISNULL(Phone,'')
+		
+		
+	
+	
+	
+			
+	PANDAS
+	
+	
+ Drop Cols
+	df.drop(columns=['Extra')
+	
+Standardize Values
+
+For department just
+	 
+	df['department'] = df['department'].str.replace('I.T., 'IT', regex=False)
+	df['department'] = df['department'].str.replace('Mktg', 'Marketing', regex=False)
+	df['department'] = df['department'].str.replace('Admin', 'Management', regex=False)
+	
+	BUT FOR  EMAIL, which could have multiple different endings, searches and replacements are usually done with regex
+	  I showed  you  a  standard python regex replacement using a list in the phone cleaning video this one  uses methods and search patterns from the actual re module
+	REGEX
+	
+	import re
+	
+	# search pattern
+	
+	pattern = re.compile(r'@.*$')
+	
+	# Function to replace text after @
+	
+	def replace_after_at(email, replacement):
+	    return pattern.sub('@' + replacement, email)
+	
+	# Apply the function to the 'Email' column
+	
+	replacement_text = 'acmewidgets.com'
+	df['Updated_Email'] = df['Email'].apply(lambda x: replace_after_at(x, replacement_text))
+	
+	df
+	
+	Replace NaNs with blanks
+	
+	df.fillna('')
