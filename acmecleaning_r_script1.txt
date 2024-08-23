@@ -1,0 +1,35 @@
+"Hello World!"
+
+
+
+
+file_path <- "C:/Users/hthom/OneDrive/Video Media/Power BI/AD/acmecleaning.csv"
+acmecleaning <- read.csv(file_path)
+
+acmecleaning
+
+
+View(acmecleaning)
+
+
+library(datsets)
+
+starwars
+
+msleep
+
+install.packages("tidyverse")
+install.packages("gtExtras")
+
+require(tidyverse)
+library(gtExtras)
+
+glimpse(acmecleaning)
+
+View(acmecleaning)
+
+acmecleaning %>% 
+  select(FirstName, LastName) %>% 
+  mutate(FullName = str_c(FirstName, LastName, sep = " ")) %>%
+  gt() %>% 
+  gt_theme_538()
