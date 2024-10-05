@@ -1,0 +1,118 @@
+#load the necessary packages -- if you don't have them installed 
+#run the following code: install.packages("package name")
+
+
+library(tidyverse)
+library(visdat)
+library(broom)
+
+
+
+# load csv file into R
+candy <- read_csv("candy-data.csv")
+
+#create backup in case you screw this one up
+candy_backup <- candy
+
+#get a glimpse of the data
+glimpse(candy)
+
+#get a quick visual overview of the data
+vis_dat(candy)
+
+#run a quick visual analysis of the correlation between variables
+candy %>% 
+  select(where(is.numeric)) %>% 
+  vis_cor()
+
+
+
+# Create a total attributes column for the candies
+# Select the relevant columns and sum attributes for each candy
+candy_tastes_good <- candy %>%
+  rowwise() %>%
+  mutate(total_attributes = sum(c_across(c(chocolate, fruity, caramel, peanutyalmondy, nougat, crispedricewafer, hard, bar, pluribus)))) %>%
+  ungroup() %>%
+  arrange(desc(total_attributes)) %>%
+  select(competitorname, total_attributes)
+  
+
+View(candy_tastes_good)
+
+
+# Add the 'total_attributes' column to the candy dataframe
+candy <- candy %>%
+  rowwise() %>%
+  mutate(total_attributes = sum(c_across(c(chocolate, fruity, caramel, peanutyalmondy, nougat, crispedricewafer)))) %>%
+  ungroup()
+
+View(candy)
+
+#create a linear model with winpercent as the dependent variable
+#and chocolate as the independent variable
+lm_model_choc <- lm(winpercent ~ chocolate, data = candy)
+
+
+#get a summary of the model statistics
+summary(lm_model_choc)
+
+
+#fit a linear model to all relevant dependendent varibles and summarize the 
+#staistical output
+
+
+
+# List of predictor variables
+predictor_vars <- c("chocolate", "fruity", "caramel", "peanutyalmondy", "sugarpercent", "pricepercent")
+
+# Function to fit a linear model and extract summary statistics
+fit_lm_and_get_summary <- function(var) {
+  model <- lm(as.formula(paste("winpercent ~", var)), data = candy)
+  summary_stats <- tidy(model) %>%
+    filter(term == var) %>%
+    select(estimate, std.error, statistic, p.value) %>%
+    mutate(Variable = var) # Add the variable name for reference
+  return(summary_stats)
+}
+
+# Apply the function to all predictor variables and bind the results
+model_summaries <- map_dfr(predictor_vars, fit_lm_and_get_summary)
+
+# Create a new data frame with the original candy data
+candy_with_stats <- candy
+
+# Loop through each variable and add its stats to the candy dataframe
+for (var in predictor_vars) {
+  # Filter the statistics for the current variable
+  stats_row <- model_summaries %>% filter(Variable == var)
+  
+  # Check if stats_row is not empty
+  if (nrow(stats_row) > 0) {
+    # Add the statistics as new columns
+    candy_with_stats <- candy_with_stats %>%
+      mutate(
+        !!paste0(var, "_estimate") := stats_row$estimate,
+        !!paste0(var, "_std_error") := stats_row$std.error,
+        !!paste0(var, "_statistic") := stats_row$statistic,
+        !!paste0(var, "_p_value") := stats_row$p.value
+      )
+  } else {
+    warning(paste("No statistics found for variable:", var))
+  }
+}
+
+# View the updated data frame
+View(candy_with_stats)
+
+
+# Write the stats data frame to a CSV file
+model_results %>%
+  select(variable, term, estimate, std.error, statistic, p.value) %>%
+  write_csv("model_results.csv")
+
+
+# Write the modified data frame to a CSV file
+write_csv(candy, "candy.csv")
+
+# Specify a different path if needed
+# write_csv(candy, "path/to/your/directory/candy_data.csv")
