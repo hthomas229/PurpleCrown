@@ -1,0 +1,111 @@
+# i# install.packages("psych")
+# install.packages("GGally")
+# install.packages("corrplot")
+# install.packages("PerformanceAnalytics")
+# install.packages("summarytools")
+# install.packages("SmartEDA")
+# install.packages("inspectdf")
+# install.packages("DataExplorer")
+
+
+library(tidyverse)
+library(gtExtras)
+library(skimr)
+library(janitor)
+library(GGally)
+library(psych)
+library(VIM)
+
+
+#skimr
+
+head(airquality)
+skim(airquality)
+n_missing(airquality)
+n_missing(airquality$Ozone)
+
+
+
+#janitor -- tabyl with adorn
+
+
+iris %>% 
+  tabyl(Species) %>% 
+  adorn_totals() %>% 
+  adorn_pct_formatting()
+
+
+  
+#GGally
+  # Convert 'cyl' to a factor for coloring the points
+  mtcars$cyl <- as.factor(mtcars$cyl)
+
+# Create a pair plot of selected columns in the mtcars dataset, colored by 'cyl'
+# Use ggpairs to create a pair plot for selected columns of mtcars
+ggpairs(mtcars, 
+        columns = c("mpg", "hp", "wt", "qsec"),   # Select columns for the pair plot
+        mapping = aes(color = factor(cyl)),       # Color by number of cylinders (as a factor)
+        upper = list(continuous = wrap("cor", size = 5)),  # Show correlation coefficients in upper panels
+        lower = list(continuous = "smooth"),      # Add a smooth line to the scatter plots in lower panels
+        diag = list(continuous = wrap("barDiag", binwidth = 2))  # Show bar plots on the diagonal
+)
+
+
+#psych
+
+describe(iris) %>%  gt() %>% gt_theme_guardian()
+pairs.panels(iris)
+error.bars(iris)
+lowerCor(iris)
+
+iris %>%
+  select(where(is.numeric)) %>%  # Select only numeric columns
+  cor() %>%                      # Compute the correlation matrix
+  corPlot(
+    numbers = TRUE,              # Display correlation coefficients on the plot
+    main = "Correlation Plot of Iris Dataset",  # Main title of the plot
+    colors = TRUE,               # Color the squares by the correlation strength
+    n = 5,                       # Number of color breaks for better differentiation
+    show.legend = TRUE,          # Display a legend for the colors
+    upper = FALSE,               # Display only the lower triangular part of the matrix
+    diag = FALSE                 # Hide the diagonal elements (correlation with self)
+  )
+
+
+
+#_______________________________________________________
+# VIM
+
+
+#install.packages("VIM")
+library(VIM)
+
+# Visualize missing data in airquality
+aggr(msleep, numbers = TRUE)
+
+
+barMiss(airquality)
+histMiss(msleep$brainwt)
+
+#real power of VIM is showing imputed values
+# create dataframew
+
+stuff <- data.frame(
+  id = 1:20,
+  numbers = c(21, 23, NA, NA, NA, 30, 34, 44, 52, NA, NA, 32, 43, 56, 59, NA, NA, NA, NA, NA)
+)
+
+stuff
+#impute missing values using kNN method -- k nearest neighbor (5)
+
+stuff2 <- kNN(stuff)
+
+stuff2 #  show _imp columns
+
+#plot imputed values
+
+aggr(stuff, numbers = TRUE)
+
+aggr(stuff2, delimiter = "_imp") 
+
+aggr(stuff2, numbers = TRUE)
