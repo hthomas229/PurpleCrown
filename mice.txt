@@ -1,0 +1,219 @@
+library(tidyverse)
+library(VIM)
+library(mice)
+library(zoo)
+library(inspectdf)
+library(visdat)
+library(skimr)
+library(stats)
+library(janitor)
+
+# https://www.gerkovink.com/miceVignettes/
+
+diabetes
+
+ 
+
+#clean and shorten variable names
+
+diabetes <- clean_names(diabetes)
+
+diabetes <- diabetes %>% rename(preg = pregnancies,
+                                bp = blood_pressure,
+                                pedigree_f = diabetes_pedigree_function,
+                                skin_th = skin_thickness)
+
+# view data missingness, types , stats, etc
+
+glimpse(diabetes)
+
+summary(diabetes)
+
+vis_dat(diabetes)
+
+inspect_cor(diabetes) 
+
+aggr(diabetes, numbers = TRUE)
+
+
+md.pattern(diabetes)
+
+
+inspect_na(diabetes)  #check % thresholds here for viable candidates
+
+skim(diabetes)# show number of complete, na count, summary stats
+
+diabetes %>%
+  select(where(is.numeric)) %>%  # Select only numeric columns
+  summarise(across(everything(), \(x) mean(x, na.rm = TRUE)))
+
+
+
+#fit a model
+
+fit1 <- with(diabetes, lm(bmi ~ skin_th))
+
+#display summary
+summary(fit1)
+
+
+#show aLL methods
+methods(mice)
+
+#run a simple mean imputation with mice 
+imp <- mice(diabetes, method = "mean",  m = 1, maxit = 1)
+
+#show methods used and predictor matrix
+imp
+
+#show results
+complete(imp)
+
+
+fit2 <- with(imp, lm(bmi ~ skin_th))
+summary(fit2)
+summary(fit1)
+densityplot(diabetes$skin_th)
+
+
+#run a regression imputation with mice 
+imp <- mice(diabetes, method = "norm.predict", m = 1, maxit = 1)
+imp
+complete(imp)
+
+
+imp
+
+complete(imp)
+
+attributes(imp)
+
+#original data
+imp$data
+
+#imputations
+imp$imp
+
+
+# show iterations
+
+c3 <- complete(imp, 3) 
+md.pattern(c3)
+
+
+# show iterations
+
+c.broad <- complete(imp, "broad")
+c.broad
+
+c.long <- complete(imp, "long")  
+c.long
+
+
+set.seed(123)
+
+
+#mice: Algorithmic convergence and inference pooling
+
+
+imp <- mice(diabetes, m = 3, print=F)
+plot(imp)
+stripplot(imp, bmi~.imp, pch=20, cex=2)
+
+imp$pred
+
+c.broad <- complete(imp, "broad")
+-c.broad
+
+
+ini <- mice(diabetes, maxit=0, print=F)
+pred <- ini$pred
+pred
+
+
+pred[ ,"preg"] <- 0
+pred
+
+
+imp <- mice(diabetes, pred = pred, print=F)
+plot(imp)
+
+
+imp <- mice(diabetes, seed = 123, print=F)
+plot(imp)
+
+
+imp$meth
+
+
+imp40 <- mice.mids(imp, maxit=35, print=F)
+plot(imp40)
+
+stripplot(imp, bmi~.imp, pch=20, cex=2)
+
+stripplot(imp)
+
+
+fit2 <- with(imp, lm(bmi ~ skin_th))
+fit2
+
+
+
+summary(fit2$analyses[[2]])
+
+pool.fit <- pool(fit2)
+summary(pool.fit)
+
+
+
+
+#mice: The imputation and nonresponse models
+
+head(boys)
+
+
+md.pattern(boys)
+
+mpat <- md.pattern(boys)
+
+sum(mpat[, "gen"] == 0)
+
+R <- is.na(boys$gen) 
+R
+n_miss(boys$gen)
+n_missing(boys$gen)
+
+require(lattice)
+# Creating a conditional histogram of 'age' by levels of 'R'
+histogram(~age | R, data = boys)
+
+imp1 <- mice(boys, print=FALSE)
+
+
+summary(boys)
+
+summary(complete(imp1))
+
+summary(with(imp1, mean(tv)))
+
+
+md.pattern(mammalsleep)
+
+
+imp <- mice(mammalsleep, maxit = 10, print=F)
+
+
+plot(imp)
+
+
+fit1 <- with(imp, lm(sws ~ log10(bw) + odi), print=F)
+
+pool(fit1)
+
+summary(pool(fit1))
+
+impnew <- mice(mammalsleep[ , -1], maxit = 10, print = F)
+fit2 <- with(impnew, lm(sws ~ log10(bw) + odi))
+pool(fit2)
+summary(pool(fit2))
+plot(impnew)

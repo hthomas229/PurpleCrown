@@ -1,0 +1,325 @@
+library(tidyverse)
+library(VIM)
+library(mice)
+library(zoo)
+library(inspectdf)
+library(visdat)
+library(skimr)
+library(janitor)
+library(gtExtras)
+library(missForest)
+
+
+names(diabetes)
+
+#clean and shorten variable names
+
+diabetes <- clean_names(diabetes)
+
+diabetes <- diabetes %>% rename(preg = pregnancies,
+                    bp = blood_pressure,
+                    pedigree_f = diabetes_pedigree_function,
+                    skin_th = skin_thickness)
+
+# view data missingness, types , stats, etc
+
+glimpse(diabetes)
+
+vis_dat(diabetes)
+
+aggr(diabetes, numbers = TRUE)
+
+
+md.pattern(diabetes)
+
+
+inspect_na(diabetes)  #check % thresholds here for viable candidates
+
+skim(diabetes)# show number opf NAs and percent complete and stats
+
+
+#DONOR BASED IMPUTATION METHODS IN VIM:  kNN, Hotdeck, MatchImpute
+
+
+#KNN
+
+#impute all the missing values with k Nearest Neighbor method
+
+kNN(diabetes)
+
+diabetes %>% 
+  gt() %>% 
+  gt_theme_nytimes()
+
+#impute all the viable candidates with  the k Nearest Neighbor method
+imp_knn <- kNN(diabetes, variable = c("glucose", "bp", "bmi"))
+
+#imputed dataframe with shadow dataframe
+imp_knn
+
+#analyze results
+
+aggr(diabetes, numbers = TRUE)
+
+aggr(imp_knn, numbers = TRUE)
+
+aggr(imp_knn, delimiter = "_imp")
+
+inspect_na(imp_knn)
+
+skim(imp_knn)
+
+
+#compare new means
+mean(diabetes$bp, na.rm = TRUE)
+mean(diabetes$glucose, na.rm = TRUE)
+mean(diabetes$bmi, na.rm = TRUE)
+
+mean(imp_knn$bp)
+mean(imp_knn$glucose)
+mean(imp_knn$bmi)
+
+diabetes %>% 
+  ggplot(aes(bp)) +
+  geom_histogram(fill = "yellow", colour = "purple")
+
+
+imp_knn %>% 
+  ggplot(aes(bp)) +
+  geom_histogram(fill = "yellow", colour = "purple")
+
+
+#HOTDECK imputation
+diabetes
+
+#impute all the missing values with the hotdedck method
+hotdeck(diabetes)
+
+#impute all the viable candidates with  the hotdeck method
+imp_hotdeck <- hotdeck(diabetes, variable = c("glucose", "bp", "bmi"))
+
+#imputed dataframe with shadow dataframe
+imp_hotdeck
+
+#analyze results
+aggr(imp_hotdeck, numbers = TRUE)
+
+aggr(imp_hotdeck, delimiter = "_imp")
+
+inspect_na(imp_hotdeck)
+
+skim(imp_hotdeck)
+
+#compare new means
+mean(diabetes$bp, na.rm = TRUE)
+mean(diabetes$glucose, na.rm = TRUE)
+mean(diabetes$bmi, na.rm = TRUE)
+
+mean(imp_hotdeck$bp)
+mean(imp_hotdeck$glucose)
+mean(imp_hotdeck$bmi)
+
+
+#compare distribution
+diabetes %>% 
+  ggplot(aes(bp)) +
+  geom_histogram(fill = "yellow", colour = "purple")
+
+
+imp_hotdeck %>% 
+  ggplot(aes(bp)) +
+  geom_histogram(fill = "yellow", colour = "purple")
+
+#hotdeck closer
+
+
+#MATCHIMPUTE
+
+#matchImpute -- you choose predictor variables
+
+
+
+
+# Introduce missing values only in the Species column (10% missing values)
+set.seed(123)  # For reproducibility
+iris.mis$Species[sample(1:nrow(iris.mis), size = 0.1 * nrow(iris.mis))] <- NA
+
+# Get the summary of the modified dataset
+summary(iris.mis)
+
+imp_MI <- matchImpute(iris.mis,
+                      match_var = c("Sepal.Length", "Petal.Length"))
+
+
+#imputed dataframe with shadow dataframe
+imp_MI
+
+
+#analyze results
+aggr(imp_MI, numbers = TRUE)
+
+aggr(imp_MI, delimiter = "_imp")
+
+inspect_na(imp_MI)
+
+
+#IRMI  Iterative Robust based Model Imputation
+
+diabetes
+
+#impute all the missing values with the IRMI method
+
+irmi(diabetes)
+
+
+#impute all the viable candidates with  the hotdeck method
+imp_irmi <-  irmi(diabetes[, c("bp", "bmi", "glucose")])
+
+
+#imputed dataframe with shadow dataframe
+imp_irmi
+
+#analyze results
+aggr(imp_irmi, numbers = TRUE)
+
+aggr(imp_irmi, delimiter = "_imp")
+
+inspect_na(imp_irmi)
+
+
+#compare new means
+mean(diabetes$bp, na.rm = TRUE)
+mean(diabetes$glucose, na.rm = TRUE)
+mean(diabetes$bmi, na.rm = TRUE)
+
+mean(imp_irmi$bp)
+mean(imp_irmi$glucose)
+mean(imp_irmi$bmi)
+
+
+#compare distribution
+diabetes %>% 
+  ggplot(aes(bp)) +
+  geom_histogram(fill = "yellow", colour = "purple")
+
+
+imp_irmi %>% 
+  ggplot(aes(bp)) +
+  geom_histogram(fill = "yellow", colour = "purple")
+
+
+
+
+#Model Based Imputation Methods
+
+
+#regressionImp
+
+#subset the dataset
+dataset2 <- diabetes[, c("glucose", "bp", "bmi")]
+
+#impute all the missing values in bp based on glucose and bmi
+imp_regression <- regressionImp(bp ~ bmi + glucose, dataset2)
+
+#imputed dataframe with shadow dataframe
+imp_regression
+#> There still missing values in variable bp 
+#>  Probably due to missing values in the regressors.
+
+#analyze results
+
+aggr(dataset2, numbers = TRUE)
+
+aggr(imp_regression, numbers = TRUE)
+
+aggr(imp_regression, delimiter = "_imp")
+
+
+#compare new means
+mean(diabetes$bp, na.rm = TRUE)
+
+mean(imp_regression$bp, na.rm = TRUE)
+
+
+#compare distribution
+diabetes %>% 
+  ggplot(aes(bp)) +
+  geom_histogram(fill = "yellow", colour = "purple")
+
+
+imp_regression %>% 
+  ggplot(aes(bp)) +
+  geom_histogram(fill = "yellow", colour = "purple")
+
+
+#rangerImpute
+
+
+#subset the dataset
+dataset2 <- diabetes[, c("glucose", "bp", "bmi")]
+
+#impute all the missing values in bp based on glucose and bmi
+imp_ranger <- rangerImpute(bp ~ bmi + glucose, dataset2)
+
+#imputed dataframe with shadow dataframe
+imp_ranger
+
+#> There still missing values in variable bp 
+#>  Probably due to missing values in the regressors.
+
+#analyze results
+aggr(imp_ranger, numbers = TRUE)
+
+aggr(imp_ranger, delimiter = "_imp")
+
+inspect_na(diabetes)
+
+skim(imp_ranger)
+
+#compare new means
+mean(diabetes$bp, na.rm = TRUE)
+
+mean(imp_ranger$bp, na.rm = TRUE)
+
+
+#compare distribution
+diabetes %>% 
+  ggplot(aes(bp)) +
+  geom_histogram(fill = "yellow", colour = "purple")
+
+
+imp_ranger %>% 
+  ggplot(aes(bp)) +
+  geom_histogram(fill = "yellow", colour = "purple")
+
+
+
+
+
+
+
+#IRMI  Iterative Robust based Model Imputation
+
+iris.mis <- iris
+
+# Introduce missing values only in the Species column (10% missing values)
+set.seed(123)  # For reproducibility
+iris.mis$Species[sample(1:nrow(iris.mis), size = 0.1 * nrow(iris.mis))] <- NA
+
+# Get the summary of the modified dataset
+summary(iris.mis)
+
+imp_MI <- matchImpute(iris.mis,
+                      match_var = c("Sepal.Length", "Petal.Length"))
+
+
+#imputed dataframe with shadow dataframe
+imp_MI
+
+
+#analyze results
+aggr(imp_MI, numbers = TRUE)
+
+aggr(imp_MI, delimiter = "_imp")
+
+inspect_na(imp_MI)
