@@ -1,0 +1,70 @@
+library(tidyverse) #for almost everything
+library(gtExtras) #for cool looking tables
+
+file_path <- "C:/Users/hthom//OneDrive//Video Media//Power BI//AD//acmecleaning 1.csv"
+acmecleaning <- read.csv(file_path)
+
+# row_number Rank sequentially ignoring ties 
+# equivalent to SQL ROW_NUMBER Python rank(method='first)
+
+acmecleaning %>% 
+  select(LastName, Department, Salary) %>% 
+  mutate(RowNumber = row_number(-Salary)) %>% # - for descending
+  arrange(RowNumber) %>% 
+  gt() %>% 
+  gt_theme_538()
+
+# rank splits ties and and skips
+# no SQL equvalent; Python rank(method='average')
+#changes type from int to numeric 
+acmecleaning %>% 
+  select(LastName, Department, Salary) %>% 
+  mutate(Rank = rank(-Salary)) %>% # - for descending
+  arrange(Rank) %>% 
+  gt() %>% 
+  gt_theme_538()
+
+
+
+# min_rank Rank sequentially using skip method ties 
+# equivalent to SQL RANK and pandas min_rank
+acmecleaning %>% 
+  select(LastName, Department, Salary) %>% 
+  mutate(Rank = min_rank(-Salary)) %>% 
+  arrange(Rank) %>% 
+  gt() %>% 
+  gt_theme_538()
+
+
+# dense_rank Rank sequentially using dense method for ties 
+# equivalent to SQL DENSE_RANK and Python rank(method='dense')
+acmecleaning %>% 
+  select(LastName, Department, Salary) %>% 
+  mutate(DenseRank = dense_rank(-Salary)) %>% 
+  arrange(DenseRank) %>% 
+  gt() %>% 
+  gt_theme_538()
+
+#ntile  split data evenly in percentiles
+#equivalent to SQL NTILE and Pandas qcut
+
+acmecleaning %>% 
+  select(LastName, Department, Salary) %>% 
+  mutate(quartile = ntile(desc(Salary), 7)) %>%  # Use desc() to reverse the order
+  arrange(quartile) %>% 
+  gt() %>% 
+  gt_theme_538()
+
+
+
+# group_by for ranking by group -- we used PARTITON BY in SQL
+acmecleaning %>% 
+  group_by(Department) %>% 
+  select(LastName, Department, Salary) %>% 
+  mutate(Rank = rank(-Salary)) %>% 
+  arrange(Rank) %>% 
+  gt() %>% 
+  gt_theme_538()
+
+
+
