@@ -1,0 +1,65 @@
+--ROW_NUMBER	Python: rank(method='first')		R: row_number
+--NA			Python: rank(method='average')		R: rank
+--RANK			Python:	rank(method='min')			R: min_rank		
+--DENSE_RANK	Python:	rank(method='dense')		R: dense_rank		
+--NTILE			Python:	qcut						R: ntile
+--NA			Python: rank(method='max')			R: NA
+
+
+--ROW_NUMBER  Assigns number sequentially ignoring any ties arbitrarily.
+-- Good for creating an ID column and identifying duplicates.
+
+SELECT *
+FROM [dbo].[acmecleaning]
+
+SELECT [FullName]
+      ,[Department]
+      ,[Salary]
+	  ,ROW_NUMBER() OVER (ORDER BY Salary DESC) AS RowNumber
+FROM [Cleaning].[dbo].[acmecleaning]
+ 
+-- RANK  Rank sequentially using skip method for ties 1224  12334
+
+SELECT [FullName]
+      ,[Department]
+      ,[Salary]
+	  ,RANK() OVER (ORDER BY Salary DESC) AS SalRank
+FROM [Cleaning].[dbo].[acmecleaning]
+
+-- DENSE_RANK Rank sequentially using dense method for ties
+
+SELECT [FullName]
+      ,[Department]
+      ,[Salary]
+	  ,DENSE_RANK() OVER (ORDER BY Salary DESC) AS SalRank
+FROM [Cleaning].[dbo].[acmecleaning]
+
+--NTILE  breaks into percentile groups as evenly as possible;
+--			n = 4 would give you quartiles etc.
+
+SELECT [FullName]
+      ,[Department]
+      ,[Salary]
+	  ,NTILE(7) OVER (ORDER BY Salary DESC) AS SalQuartile
+FROM [Cleaning].[dbo].[acmecleaning]
+
+
+-- All Together Now
+
+SELECT [FullName]
+      ,[Department]
+      ,[Salary]
+	  ,ROW_NUMBER() OVER (ORDER BY Salary DESC) AS RowNumber
+	  ,RANK() OVER (ORDER BY Salary DESC) AS SalRank
+	  ,DENSE_RANK() OVER (ORDER BY Salary DESC) AS SalRank
+	  ,NTILE(4) OVER (ORDER BY Salary DESC) AS SalQuartile
+FROM [Cleaning].[dbo].[acmecleaning]
+
+-- PARTITION BY Rank by grouping
+
+SELECT [FullName]
+      ,[Department]
+      ,[Salary]
+	  ,DENSE_RANK() OVER (PARTITION BY Department ORDER BY Salary DESC) AS SalRank
+FROM [Cleaning].[dbo].[acmecleaning]
+
