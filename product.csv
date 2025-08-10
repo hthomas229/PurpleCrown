@@ -1,0 +1,51 @@
+Product ID,Product Name,Category,Price,Stock,Supplier,Date Added
+P001,Wireless Earbuds,Electronics,59.99,150,SoundWave Inc,2023-01-10
+P002,Bluetooth Speaker,Electronics,89.50,75,AudioMax Ltd,2023-02-15
+P003,Smart Watch,Wearables,199.99,40,TimeTech Corp,2023-03-05
+P004,Yoga Mat,Fitness,25.00,200,FitLife Co,2023-01-22
+P005,Stainless Steel Bottle,Accessories,18.75,300,EcoGear Ltd,2023-04-10
+P006,Laptop Stand,Electronics,45.99,80,DeskPro Solutions,2023-05-18
+P007,Noise-Canceling Headphones,Electronics,249.95,35,SilentAir Inc,2023-06-01
+P008,Resistance Bands,Fitness,15.50,250,FitLife Co,2023-02-28
+P009,Portable Charger,Electronics,34.99,180,PowerGo Ltd,2023-03-14
+P010,Smart Light Bulb,Home,12.99,400,BrightHome Inc,2023-07-22
+P011,Waterproof Backpack,Accessories,49.95,120,TrailBlazer Co,2023-08-05
+P012,Electric Toothbrush,Health,55.00,90,CleanSmile Ltd,2023-09-12
+P013,Running Shoes,Footwear,85.00,60,SprintStep Inc,2023-10-01
+P014,Protein Powder,Health,39.99,110,NutriFuel Co,2023-11-05
+P015,Wireless Mouse,Electronics,29.99,140,ClickTech Ltd,2023-12-10
+P016,Yoga Block,Fitness,12.50,180,FitLife Co,2024-01-08
+P017,Smart Thermostat,Home,179.99,25,ClimateSmart Inc,2024-02-14
+P018,Desk Lamp,Home,32.49,70,BrightHome Inc,2024-03-01
+P019,USB-C Hub,Electronics,39.95,95,ConnectPro Ltd,2024-03-20
+P020,Folding Chair,Furniture,44.99,50,ComfySeats Co,2024-04-05
+P021,Action Camera,Electronics,299.95,20,GoVideo Inc,2024-04-18
+P022,Sleep Mask,Health,9.99,350,DreamWell Ltd,2024-05-02
+P023,Insulated Mug,Accessories,22.00,220,EcoGear Ltd,2024-05-15
+P024,Wireless Keyboard,Electronics,64.50,70,TypeFast Inc,2024-06-01
+P025,Fitness Tracker,Wearables,79.99,85,TimeTech Corp,2024-06-10
+P026,Back Support Cushion,Furniture,38.99,65,ComfySeats Co,2024-06-25
+P027,Smart Doorbell,Home,129.99,40,SecureHome Inc,2024-07-05
+P028,Electric Kettle,Home,49.95,100,QuickBoil Ltd,2024-07-18
+P029,Phone Grip,Accessories,7.50,500,HoldTight Co,2024-08-01
+P030,LED Strip Lights,Home,24.99,160,BrightHome Inc,2024-08-10
+P031,Water Flosser,Health,74.95,55,CleanSmile Ltd,2024-08-25
+P032,Mesh Running Shorts,Footwear,34.99,130,SprintStep Inc,2024-09-05
+P033,Smart Scale,Health,59.99,70,WeighRight Inc,2024-09-15
+P034,Neck Pillow,Travel,19.95,190,TravelEase Co,2024-09-28
+P035,Portable SSD,Electronics,119.99,45,DataSafe Ltd,2024-10-05
+P036,Desk Organizer,Home,16.49,110,NeatSpace Inc,2024-10-12
+P037,Metal Water Bottle,Accessories,21.99,260,EcoGear Ltd,2024-10-20
+P038,Wireless Charging Pad,Electronics,27.50,140,PowerGo Ltd,2024-10-28
+P039,Jump Rope,Fitness,10.99,300,FitLife Co,2024-11-01
+P040,Smart Plug,Home,19.99,210,SmartHome Co,2024-11-08
+P041,Bluetooth Tracker,Accessories,24.95,170,FindMyStuff Inc,2024-11-15
+P042,Cooling Towel,Fitness,13.75,180,FitLife Co,2024-11-22
+P043,LED Desk Lamp,Home,36.99,90,BrightHome Inc,2024-11-29
+P044,Wireless Earbuds Pro,Electronics,129.99,60,SoundWave Inc,2024-12-01
+P045,Posture Corrector,Health,42.50,85,BackCare Ltd,2024-12-08
+P046,Travel Backpack,Accessories,69.95,70,TrailBlazer Co,2024-12-15
+P047,Smart Ring,Wearables,199.00,30,TimeTech Corp,2024-12-20
+P048,Gaming Mouse,Electronics,59.99,50,ClickTech Ltd,2024-12-22
+P049,Resistance Tube Set,Fitness,17.99,200,FitLife Co,2024-12-25
+P050,Electric Fan,Home,39.99,90,CoolAir Inc,2024-12-28
